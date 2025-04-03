@@ -1,43 +1,69 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Stack, Tabs } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+        tabBarActiveTintColor: colorScheme === 'dark' ? 'white' : '#3B82F6',
+        tabBarInactiveTintColor: colorScheme === 'dark' ? '#94A3B8' : '#9CA3AF',
+        tabBarStyle: [
+          Platform.select({
+            ios: {
+              position: 'absolute',
+              borderTopWidth: 0,
+              shadowOffset: { width: 0, height: -3 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+            },
+            android: {
+              elevation: 8,
+              borderTopWidth: 0,
+            },
+          }),
+          {
+            backgroundColor: colorScheme === 'dark' ? '#1E293B' : 'white',
+            height: Platform.OS === 'ios' ? 80 : 60,
+            paddingBottom: Platform.OS === 'ios' ? 20 : 8,
           },
-          default: {},
-        }),
-      }}>
+        ],
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+          marginBottom: Platform.OS === 'ios' ? 4 : 0,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="cart"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Cart',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="cart" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="person" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
