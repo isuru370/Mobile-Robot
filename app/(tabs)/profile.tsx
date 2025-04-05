@@ -7,6 +7,8 @@ import {
 import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { auth } from '../../firebase';
+import { router } from 'expo-router';
 
 // Define types for navigation
 type ProfileDrawerParamList = {
@@ -22,6 +24,14 @@ interface ProfileScreenProps {
 
 // Custom Drawer Content with proper typing
 function CustomDrawerContent(props: DrawerContentComponentProps) {
+  const logOut = async () =>{
+    try {
+      await auth.signOut();
+      router.replace('/(auth)');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  }
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
       <View className="flex-1 bg-white">
@@ -42,7 +52,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 
         {/* Drawer Footer */}
         <View className="p-4 border-t border-gray-100">
-          <TouchableOpacity className="flex-row items-center py-2">
+          <TouchableOpacity onPress={logOut} className="flex-row items-center py-2">
             <Ionicons name="log-out-outline" size={22} color="#ef4444" />
             <Text className="ml-4 text-red-500">Log Out</Text>
           </TouchableOpacity>
